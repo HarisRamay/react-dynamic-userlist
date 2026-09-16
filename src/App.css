@@ -1,0 +1,110 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  color: #222;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.container {
+  width: min(900px, 92%);
+  margin: 50px auto;
+}
+
+header {
+  margin-bottom: 30px;
+}
+
+header h1 {
+  margin-bottom: 8px;
+}
+
+header p {
+  color: #666;
+}
+
+.search-container {
+  margin-bottom: 20px;
+}
+
+.search-container input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+}
+
+.search-container input:focus {
+  border-color: #555;
+}
+
+.counter {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: white;
+  border-radius: 8px;
+}
+
+.user-list {
+  display: grid;
+  gap: 12px;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+.user-card h3 {
+  margin: 0 0 5px;
+}
+
+.user-card p {
+  margin: 0 0 10px;
+  color: #666;
+}
+
+.active,
+.inactive {
+  display: inline-block;
+  padding: 4px 9px;
+  border-radius: 20px;
+  font-size: 13px;
+}
+
+.active {
+  background: #dff7e5;
+  color: #187a35;
+}
+
+.inactive {
+  background: #fbe1e1;
+  color: #a52727;
+}
+
+.user-card button {
+  border: none;
+  padding: 10px 14px;
+  border-radius: 7px;
+  cursor: pointer;
+  background: #222;
+  color: white;
+}
+
+.user-card button:hover {
+  opacity: 0.8;
+}
