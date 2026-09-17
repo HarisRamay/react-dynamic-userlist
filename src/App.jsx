@@ -1,54 +1,17 @@
 import { useCallback, useState, useEffect } from "react";
-import { getUsers } from "./api/usersApi";
+import {
+  getUsers,
+  searchUsers,
+  updateUserStatus,
+} from "./api/usersApi";
 import { initialUsers } from "./data/users";
 import Dashboard from "./components/Dashboard";
 import SearchInput from "./components/SearchInput";
 import UserList from "./components/UserList";
 import ActiveUsersCounter from "./components/ActiveUsersCounter";
+import OnlineStatus from "./components/OnlineStatus";
 
-function TeamMembers() {
-  const [show, setShow] = useState(true);
 
-  return (
-    <>
-      <button onClick={() => setShow(!show)}>
-        Toggle Team Members
-      </button>
-
-      {show && <OnlineStatus />}
-    </>
-  );
-}
-
- function OnlineStatus() {
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
-
-  useEffect(() => {
-    console.log("EFFECT: adding listeners");
-
-    const handleOnline = () => {
-      console.log("ONLINE EVENT");
-      setIsOnline(true);
-    };
-
-    const handleOffline = () => {
-      console.log("OFFLINE EVENT");
-      setIsOnline(false);
-    };
-
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
-
-    return () => {
-      console.log("CLEANUP: removing listeners");
-
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
-    };
-  }, []);
-
-  return <h2>{isOnline ? "🟢 Online" : "🔴 Offline"}</h2>;
-}
 
 export default function App() {
   const [users, setUsers] = useState([]);
@@ -80,29 +43,81 @@ export default function App() {
     fetchUsers();
   }, []);
 
-
+   //use effect to search users when the search state changes
   function handleSearch(value) {
     setSearch(value);
   }
 
   const handleToggle = useCallback((userId) => {
-    setUsers((currentUsers) =>
-      currentUsers.map((user) =>
-        user.id === userId
-          ? { ...user, active: !user.active }
-          : user
-      )
-    );
-  }, []);
+  const user = users.find((user) => user.id === userId);
 
-  const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().includes(search.toLowerCase())
+  if (!user) {
+    return;
+  }
+
+  const previousStatus = user.active;
+  const newStatus = !previousStatus;
+
+  // 1. Optimistically update UI
+  setUsers((currentUsers) =>
+    currentUsers.map((user) =>
+      user.id === userId
+        ? { ...user, active: newStatus }
+        : user
+    )
   );
 
+  // 2. Send API request
+  updateUserStatus(userId, newStatus)
+    .then(() => {
+      console.log("Status update successful");
+    })
+    .catch((error) => {
+      console.error(error);
+
+      // 3. Rollback
+      setUsers((currentUsers) =>
+        currentUsers.map((user) =>
+          user.id === userId
+            ? { ...user, active: previousStatus }
+            : user
+        )
+      );
+    });
+}, [users]);
 
   useEffect(() => {
-    console.log("Effect executed");
-  }, [search]);
+  if (!search.trim()) {
+    setUsers(initialUsers);
+    return;
+  }
+
+  const controller = new AbortController();
+
+  console.log("Search request started:", search);
+
+  searchUsers(search, controller.signal)
+    .then((data) => {
+      console.log("Search request completed:", search);
+
+      setUsers(data);
+    })
+    .catch((error) => {
+      if (error.name === "AbortError") {
+        console.log("Search request aborted:", search);
+        return;
+      }
+
+      console.error(error);
+    });
+
+  return () => {
+    console.log("Aborting request:", search);
+
+    controller.abort();
+  };
+}, [search]);
+ const filteredUsers = users;
 
   if (loading) {
     return <p>Loading users...</p>;
@@ -134,9 +149,10 @@ export default function App() {
         </button>
 
         {showDashboard && <Dashboard />}
-        <TeamMembers />
-
-
+        
+        <div>
+          <OnlineStatus />
+        </div>
       </header>
 
       <SearchInput
