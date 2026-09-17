@@ -1,4 +1,6 @@
-export default function SearchInput({ search, onSearch }) {
+import React, { memo } from "react";
+function SearchInput({ search, onSearch }) {
+  console.log("Rendering SearchInput:");
   return (
     <div className="search-container">
       <input
@@ -10,3 +12,5 @@ export default function SearchInput({ search, onSearch }) {
     </div>
   );
 }
+
+export default memo(SearchInput);

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
+import React, { memo } from "react";
 
-
-export default function Dashboard() {
+ function Dashboard() {
   const [seconds, setSeconds] = useState(0);
- 
+  
 
   useEffect(() => {
     console.log("Timer started");
@@ -24,3 +24,5 @@ export default function Dashboard() {
     </div>
   );
 }
+
+export default memo(Dashboard);

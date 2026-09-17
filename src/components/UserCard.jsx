@@ -14,7 +14,7 @@ function UserCard({ user, onToggle }) {
         </span>
       </div>
 
-      <button onClick={() => onToggle(user.id)}>
+      <button onClick={() => onToggle(user.id, user.active)}>
         {user.active ? "Mark Inactive" : "Mark Active"}
       </button>
     </article>

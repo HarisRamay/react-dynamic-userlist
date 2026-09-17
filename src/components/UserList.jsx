@@ -1,6 +1,7 @@
 import UserCard from "./UserCard";
-
-export default function UserList({ users, onToggle }) {
+import { memo } from "react";
+ function UserList({ users, onToggle }) {
+  console.log("Rendering UserList:", users.length);
   return (
     <div className="user-list">
       {users.map((user) => (
@@ -13,3 +14,5 @@ export default function UserList({ users, onToggle }) {
     </div>
   );
 }
+
+export default memo(UserList);

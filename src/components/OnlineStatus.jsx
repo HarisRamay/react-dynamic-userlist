@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-
-export default function OnlineStatus() {
+import React, { memo } from "react";
+function OnlineStatus() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+  console.log("Rendering OnlineStatus:");
 
   useEffect(() => {
     const handleOnline = () => {
@@ -25,3 +26,4 @@ export default function OnlineStatus() {
 
   return <p>{isOnline ? "Online" : "Offline"}</p>;
 }
+export default memo(OnlineStatus);
