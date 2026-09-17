@@ -6,20 +6,33 @@ import SearchInput from "./components/SearchInput";
 import UserList from "./components/UserList";
 import ActiveUsersCounter from "./components/ActiveUsersCounter";
 
-export default function App() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [search, setSearch] = useState("");
-  const [showDashboard, setShowDashboard] = useState(true);
+function TeamMembers() {
+  const [show, setShow] = useState(true);
+
+  return (
+    <>
+      <button onClick={() => setShow(!show)}>
+        Toggle Team Members
+      </button>
+
+      {show && <OnlineStatus />}
+    </>
+  );
+}
+
+ function OnlineStatus() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   useEffect(() => {
+    console.log("EFFECT: adding listeners");
+
     const handleOnline = () => {
+      console.log("ONLINE EVENT");
       setIsOnline(true);
     };
 
     const handleOffline = () => {
+      console.log("OFFLINE EVENT");
       setIsOnline(false);
     };
 
@@ -27,10 +40,24 @@ export default function App() {
     window.addEventListener("offline", handleOffline);
 
     return () => {
+      console.log("CLEANUP: removing listeners");
+
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
     };
   }, []);
+
+  return <h2>{isOnline ? "🟢 Online" : "🔴 Offline"}</h2>;
+}
+
+export default function App() {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [search, setSearch] = useState("");
+  const [showDashboard, setShowDashboard] = useState(true);
+
+
 
 
   function fetchUsers() {
@@ -107,12 +134,9 @@ export default function App() {
         </button>
 
         {showDashboard && <Dashboard />}
-        <div>
-          {isOnline ? "Online" : "Offline"}
-        </div>
+        <TeamMembers />
 
-        
-        
+
       </header>
 
       <SearchInput

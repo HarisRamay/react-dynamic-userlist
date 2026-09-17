@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 
+
 export default function Dashboard() {
   const [seconds, setSeconds] = useState(0);
+ 
 
   useEffect(() => {
     console.log("Timer started");
