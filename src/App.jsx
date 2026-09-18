@@ -1,4 +1,4 @@
-import { useState,useCallback } from "react";
+import { useState, useCallback } from "react";
 
 import Dashboard from "./components/Dashboard";
 import SearchInput from "./components/SearchInput";
@@ -12,7 +12,20 @@ export default function App() {
   const [search, setSearch] = useState("");
   const [showDashboard, setShowDashboard] = useState(true);
 
-   const {
+
+  //This is for practicing stale closure issue in React. Uncomment the below code to see the effect of stale closure in React.
+  // const [count, setCount] = useState(0);
+
+  // useEffect(() => {
+  //   console.log("Effect ran with count:", count);
+  //   const timer = setTimeout(() => {
+  //     console.log("Timer callback count:", count);
+  //   }, 5000);
+
+  //   return () => clearTimeout(timer);
+  // }, []);
+
+  const {
     users,
     loading,
     error,
@@ -20,11 +33,11 @@ export default function App() {
     updateUser,
   } = useUsers(search);
 
-  
-  
- const handleSearch = useCallback((value) => {
-  setSearch(value);
-}, []);
+
+
+  const handleSearch = useCallback((value) => {
+    setSearch(value);
+  }, []);
 
   if (loading) {
     return <p>Loading users...</p>;
@@ -47,11 +60,17 @@ export default function App() {
   return (
     <main className="container">
       <header>
+        {/* <p>Current count: {count}</p>
+
+        <button onClick={() => setCount(count + 1)}>
+          Increment
+        </button> */}
+
         <h1>Team Members</h1>
         <p>
           Search team members and manage their active status.
         </p>
-        <button onClick={() => setShowDashboard( prev => !prev )}>
+        <button onClick={() => setShowDashboard(prev => !prev)}>
           {showDashboard ? "Remove Dashboard" : "Show Dashboard"}
         </button>
 

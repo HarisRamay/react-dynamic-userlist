@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import React, { memo } from "react";
 
  function Dashboard() {
+  console.log("Dashboard rendered");
   const [seconds, setSeconds] = useState(0);
   
 
